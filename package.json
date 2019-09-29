@@ -1,0 +1,26 @@
+{
+  "name": "dapp-academy",
+  "description": "A Simple Decentralized Resume with Solidity, ReactJS and IPFS",
+  "author": {
+    "name": "Mitch Pierias",
+    "email": "academy@pierias.com",
+    "url": "https://mitch.pierias.com"
+  },
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "migrate": "truffle migrate",
+    "test": "truffle test"
+  },
+  "dependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-scripts": "3.1.2",
+    "web3": "^1.2.1"
+  },
+  "devDependencies": {
+    "truffle": "^5.0.37"
+  }
+}
