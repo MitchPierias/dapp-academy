@@ -8,7 +8,8 @@ contract Resume {
   uint public local;
   Availability public status;
   string[] public skills;
-  Occupation[] public occupations;
+  Link[] links;
+  Occupation[] occupations;
   
   mapping(string => string) availableSkills;
   mapping(uint => Location) locations;
@@ -47,21 +48,33 @@ contract Resume {
     string country;
   }
 
+  struct Link {
+
+  }
+
   event OccupationListed(uint atIndex, string title);
-  event OccupationChanged(uint atIndex, string[] fields);
+  event OccupationChanged(uint atIndex, string fields);
   event OccupationRemoved(string title);
   event OccupationSet(uint id, string role);
 
   modifier whenOwner(address caller) {
     // Check if caller address matches owner address
+    _;
   }
 
   modifier whenUniqueOrganisation(uint id) {
     // Check the organisation has already been stored
+    _;
   }
 
   modifier whenOccupationExists(uint atIndex) {
     // Check if the occupation exists at the specified index
+    _;
+  }
+
+  modifier whenOrganizationExists(uint withID) {
+    // Check if the organization exists withe the specified id
+    _;
   }
 
   function addOccupation() public whenOwner(msg.sender) payable {
@@ -82,11 +95,12 @@ contract Resume {
     // Notify of field changes
   }
 
-  function getOccupation(uint atIndex) public returns (string, uint, string, string, string, uint, uint, string[]) {
+  function getOccupation(uint atIndex) public returns (string memory, uint, string memory, string memory, string memory, uint, uint, string memory) {
     // Fetch the occupation matching at the specified index
     // Fetch the occupations location
-    // Stringify location
+      // Stringify location into the format "CITY, COUNTRY"
     // Search and replace skill identifiers to skill names
+      // Stringify skills with delimiter
     // Return tuple of occupation data
       // (role, employer, description, link, locationString, startDate, endDate, skillCollection);
   }
@@ -96,7 +110,22 @@ contract Resume {
     // Sets position to previous index when removed occupation is current
   }
 
-  function addOrganization(uint id) public payable whenUniqueOrganisation(id) {
-    
+  function addOrganization(uint id) public whenUniqueOrganisation(id) payable whenOwner(msg.sender)  {
+
+  }
+
+  function updateOrganization(uint withID) public whenOccupationExists(withID) payable whenOwner(msg.sender) {
+
+  }
+
+  function removeOrganization(uint withID) public whenOrganizationExists(withID) payable whenOwner(msg.sender) {
+
+  }
+
+  function updateOccupationTimeline(uint atIndex, uint startDate, uint endDate) public whenOccupationExists(atIndex) payable whenOwner(msg.sender) {
+    // Validate startDate exists
+    // Ensure the endDate is greater than startDate
+    // If no endDate, cast to null or undefined
+    // Update state
   }
 }
