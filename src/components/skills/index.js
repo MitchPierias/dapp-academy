@@ -2,7 +2,7 @@ import React from 'react'
 import { SectionList } from '../section-list'
 
 export const Skills = (props) => (
-  <div style={{ display: 'flex', justifyContent: 'center' }}>
+  <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
     {props.skills.map((skill) => (
       <SkillItem label={skill.label} />
     ))}

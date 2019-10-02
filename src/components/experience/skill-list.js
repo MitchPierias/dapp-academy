@@ -8,4 +8,4 @@ export const SkillList = (props) => {
   return null
 }
 
-const getSkillText = (skills) => ('string' === typeof skills ? skills : skills instanceof Array ? skills.join(', ') : null)
+const getSkillText = (skills) => ('string' === typeof skills ? skills : skills instanceof Array ? skills.join(' • ') : null)
