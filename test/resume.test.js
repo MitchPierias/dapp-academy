@@ -3,12 +3,35 @@ const Resume = artifacts.require('Resume')
 const { mockName, mockSkills, mockOrganization, mockOccupations, mockLocation, mockLink } = require('./mock-data')
 
 contract('Resume', (accounts) => {
+  const ownerAccount = accounts[0]
+  const otherAccount = accounts[1]
+  const maliciousAccount = accounts[2]
   // Administration configuration
   context('Ownership', () => {
-    it('should set the initial caller as owner')
-    it('should fail to delegate a new owner when not authorized')
-    it('should fail to delegate owner as owner')
-    it('should delegate a new owner when authorized')
+    it('should set the initial caller as owner', () => {
+      return Resume.deployed({ from: ownerAccount })
+        .then((instance) => instance.getOwner.call())
+        .then((owner) => assert.equal(owner, ownerAccount))
+    })
+    it('should fail to delegate a new owner when not authorized', () => {
+      return Resume.deployed({ from: ownerAccount })
+        .then((instance) => instance.setOwner.call(maliciousAccount, { from: maliciousAccount }))
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    it('should fail to delegate owner to self', () => {
+      return Resume.deployed({ from: ownerAccount })
+        .then((instance) => instance.setOwner(ownerAccount, { from: ownerAccount }))
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    it('should delegate a new owner when authorized', async () => {
+      const instance = await Resume.deployed({ from: ownerAccount })
+      const result = await instance.setOwner(otherAccount, { from: ownerAccount })
+      assert.isOk(result)
+      const owner = await instance.getOwner.call()
+      assert.equal(owner, otherAccount)
+    })
   })
   // Individual's current details
   context('Details', () => {
@@ -20,10 +43,15 @@ contract('Resume', (accounts) => {
     })
     // Current location
     context('Location', () => {
-      it("should set the individual's location field")
-      it('should update the owners location field')
+      it("should update the individual's location field")
       it('should fail to set location field when not authorized')
       it('should fail to set location field with invalid location value')
+    })
+    // Profession
+    context('Profession', () => {
+      it("should update the individual's profession")
+      it('should fail to set profession field when not authorized')
+      it('should fail to set profession when length exceeds maximum threshold')
     })
     // Link list
     context('Links', () => {
@@ -33,10 +61,10 @@ contract('Resume', (accounts) => {
     })
   })
   // Occupation role list
-  context('Occupations', () => {
+  context('Experience', () => {
     // Listing
-    it('should list a new occupation role')
-    it('should fail to create an occupation when not authorized')
+    it('should list a new occupation')
+    it('should fail to list an occupation when not authorized')
     // Additional role description
     context('Description', () => {
       it("should update the occupation's description")

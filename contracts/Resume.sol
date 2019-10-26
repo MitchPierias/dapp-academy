@@ -2,14 +2,14 @@ pragma solidity >=0.4.0 <0.7.0;
 
 contract Resume {
 
-  address private owner;
+  address public owner = msg.sender;
   string public name;
-  uint public position;
+  uint public profession;
   uint public local;
   Availability public status;
   string[] public skills;
   Link[] links;
-  Occupation[] occupations;
+  Occupation[] experience;
   
   mapping(string => string) availableSkills;
   mapping(uint => Location) locations;
@@ -20,6 +20,17 @@ contract Resume {
     Unemployed,
     Seeking,
     Employed
+  }
+
+  enum Level {
+    Attendee,
+    Participant,
+    Certified,
+    License,
+    Diploma,
+    Bachelors,
+    Masters,
+    Doctorates
   }
 
   struct Occupation {
@@ -37,6 +48,7 @@ contract Resume {
   struct Organization {
     uint id;
     string name;
+    string nickname;
     string link;
     string image;
     Location location;
@@ -49,7 +61,8 @@ contract Resume {
   }
 
   struct Link {
-
+    uint id;
+    string url;
   }
 
   event OccupationListed(uint atIndex, string title);
@@ -57,8 +70,9 @@ contract Resume {
   event OccupationRemoved(string title);
   event OccupationSet(uint id, string role);
 
-  modifier whenOwner(address caller) {
+  modifier whenOwner() {
     // Check if caller address matches owner address
+    require(msg.sender == owner);
     _;
   }
 
@@ -77,17 +91,26 @@ contract Resume {
     _;
   }
 
-  function addOccupation() public whenOwner(msg.sender) payable {
+  function setOwner(address newOwner) public whenOwner {
+    require(newOwner != owner);
+    owner = newOwner;
+  }
+
+  function getOwner() public view returns (address) {
+    return owner;
+  }
+
+  function addOccupation() public whenOwner payable {
     // Construct occupation object
     // List occupation object
     // Notify occupation listing
   }
 
-  function setOccupation(uint withIndex) public whenOccupationExists(withIndex) payable whenOwner(msg.sender) {
+  function setOccupation(uint withIndex) public whenOccupationExists(withIndex) payable whenOwner {
     // Set the position to the occupation index
   }
 
-  function updateOccupation(uint atIndex) public whenOccupationExists(atIndex) payable whenOwner(msg.sender) {
+  function updateOccupation(uint atIndex) public whenOccupationExists(atIndex) payable whenOwner {
     // Fetch the existing occupation at index
     // Set fields which have changed
       // Capture change field name
@@ -105,24 +128,24 @@ contract Resume {
       // (role, employer, description, link, locationString, startDate, endDate, skillCollection);
   }
 
-  function removeOccupation(uint atIndex) public whenOccupationExists(atIndex) payable whenOwner(msg.sender) {
+  function removeOccupation(uint atIndex) public whenOccupationExists(atIndex) payable whenOwner {
     // Removes the occupation at index
     // Sets position to previous index when removed occupation is current
   }
 
-  function addOrganization(uint id) public whenUniqueOrganisation(id) payable whenOwner(msg.sender)  {
+  function addOrganization(uint id) public whenUniqueOrganisation(id) payable whenOwner  {
 
   }
 
-  function updateOrganization(uint withID) public whenOccupationExists(withID) payable whenOwner(msg.sender) {
+  function updateOrganization(uint withID) public whenOccupationExists(withID) payable whenOwner {
 
   }
 
-  function removeOrganization(uint withID) public whenOrganizationExists(withID) payable whenOwner(msg.sender) {
+  function removeOrganization(uint withID) public whenOrganizationExists(withID) payable whenOwner {
 
   }
 
-  function updateOccupationTimeline(uint atIndex, uint startDate, uint endDate) public whenOccupationExists(atIndex) payable whenOwner(msg.sender) {
+  function updateOccupationTimeline(uint atIndex, uint startDate, uint endDate) public whenOccupationExists(atIndex) payable whenOwner {
     // Validate startDate exists
     // Ensure the endDate is greater than startDate
     // If no endDate, cast to null or undefined
