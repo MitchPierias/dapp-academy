@@ -1,30 +1,26 @@
 exports.mockName = 'Mitch Pierias'
 
-exports.mockLocation = 'Brisbane, Australia'
+exports.mockLocation = {
+  city: 'Brisbane',
+  country: 'Australia',
+}
 
-exports.mockOccupations = [
-  {
-    id: '',
+exports.mockOccupationQuery = {
+  input: {
+    id: 0,
     role: 'Software Engineer',
-    organization: 'Dominos Pizza Enterprises Limited',
-    location: 'Brisbane, Australia',
+    description: '',
+    link: '',
+    organization: 0,
+    location: 0,
+    startDate: 1572087310,
+    endDate: 1572163310,
   },
-  {
-    id: '',
-    role: 'Full Stack Software Developer',
-    organization: 'CUA',
-    location: 'Brisbane, Australia',
-  },
-  {
-    id: '',
-    role: 'Full Stack Software Developer',
-    organization: 'Syndicate',
-    location: 'Brisbane, Australia',
-  },
-]
+  result: ['Software Engineer', 'Dominos Pizza Enterprises Limited', '', '', 'Brisbane, Australia', 1572087310, 1572163310],
+}
 
 exports.mockOrganization = {
-  id: '',
+  id: 0,
   name: 'Resume',
   image: '',
   link: 'https://mitch.pierias.com',

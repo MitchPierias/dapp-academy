@@ -1,0 +1,10 @@
+# Node files
+node_modules
+# Build output
+dist
+# Apple files
+.DS_Store
+# VS Code
+.vscode
+# Truffle
+build

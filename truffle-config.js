@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   networks: {
     development: {
@@ -11,4 +13,5 @@ module.exports = {
       network_id: '*',
     },
   },
+  contracts_build_directory: path.join(__dirname, 'src/contracts'),
 }

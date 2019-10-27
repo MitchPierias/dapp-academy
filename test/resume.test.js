@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 const Resume = artifacts.require('Resume')
-const { mockName, mockSkills, mockOrganization, mockOccupations, mockLocation, mockLink } = require('./mock-data')
+const { mockName, mockSkills, mockOrganization, mockLocation, mockLink, mockOccupationQuery } = require('./mock-data')
+
+const flattenTuple = (tuple) => Object.values(tuple).map((value) => ('object' === typeof value && value.words ? value.toNumber() : value))
 
 contract('Resume', (accounts) => {
   const ownerAccount = accounts[0]
@@ -9,43 +11,82 @@ contract('Resume', (accounts) => {
   // Administration configuration
   context('Ownership', () => {
     it('should set the initial caller as owner', () => {
-      return Resume.deployed({ from: ownerAccount })
-        .then((instance) => instance.getOwner.call())
+      return Resume.deployed()
+        .then((instance) => instance.getOwner())
         .then((owner) => assert.equal(owner, ownerAccount))
     })
     it('should fail to delegate a new owner when not authorized', () => {
-      return Resume.deployed({ from: ownerAccount })
-        .then((instance) => instance.setOwner.call(maliciousAccount, { from: maliciousAccount }))
+      return Resume.deployed()
+        .then((instance) => instance.setOwner(maliciousAccount, { from: maliciousAccount }))
         .then(() => assert.fail('Expected error to be thrown'))
         .catch((error) => assert.include(error.message, 'revert'))
     })
     it('should fail to delegate owner to self', () => {
-      return Resume.deployed({ from: ownerAccount })
+      return Resume.deployed()
         .then((instance) => instance.setOwner(ownerAccount, { from: ownerAccount }))
         .then(() => assert.fail('Expected error to be thrown'))
         .catch((error) => assert.include(error.message, 'revert'))
     })
     it('should delegate a new owner when authorized', async () => {
-      const instance = await Resume.deployed({ from: ownerAccount })
+      const instance = await Resume.deployed()
       const result = await instance.setOwner(otherAccount, { from: ownerAccount })
       assert.isOk(result)
-      const owner = await instance.getOwner.call()
+      const owner = await instance.getOwner()
       assert.equal(owner, otherAccount)
     })
   })
   // Individual's current details
   context('Details', () => {
+    // Reset owner
+    before(async () => {
+      const instance = await Resume.deployed()
+      const owner = await instance.getOwner()
+      if (owner === ownerAccount) return
+      await instance.setOwner(ownerAccount, { from: owner })
+    })
     // Individual's full name
     context('Name', () => {
-      it("should update the individual's full name")
-      it('should fail to set name field when not authorized')
-      it('should fail to set name field with invalid name value')
+      it("should update the individual's full name", async () => {
+        const instance = await Resume.deployed()
+        await instance.setName(mockName, { from: ownerAccount })
+        const name = await instance.getName()
+        return assert.equal(name, mockName)
+      })
+      it('should fail to set name field when not authorized', () => {
+        return Resume.deployed()
+          .then((instance) => instance.setName(mockName, { from: maliciousAccount }))
+          .then(() => assert.fail('Expected error to be thrown'))
+          .catch((error) => assert.include(error.message, 'revert'))
+      })
+      it('should fail to set name field with invalid name value', () => {
+        return Resume.deployed()
+          .then((instance) => instance.setName('', { from: ownerAccount }))
+          .then(() => assert.fail('Expected error to be thrown'))
+          .catch((error) => assert.include(error.message, 'revert'))
+      })
     })
     // Current location
     context('Location', () => {
-      it("should update the individual's location field")
-      it('should fail to set location field when not authorized')
-      it('should fail to set location field with invalid location value')
+      it("should update the individual's location field", async () => {
+        const { city, country } = mockLocation
+        const instance = await Resume.deployed()
+        await instance.setLocation(city, country)
+        const location = await instance.getLocation()
+        return assert.equal(location, `${city}, ${country}`)
+      })
+      it('should fail to set location field when not authorized', () => {
+        const { city, country } = mockLocation
+        return Resume.deployed()
+          .then((instance) => instance.setLocation(city, country, { from: maliciousAccount }))
+          .then(() => assert.fail('Expected error to be thrown'))
+          .catch((error) => assert.include(error.message, 'revert'))
+      })
+      it('should fail to set location field with invalid location value', () => {
+        return Resume.deployed()
+          .then((instance) => instance.setLocation('', '', { from: ownerAccount }))
+          .then(() => assert.fail('Expected error to be thrown'))
+          .catch((error) => assert.include(error.message, 'revert'))
+      })
     })
     // Profession
     context('Profession', () => {
@@ -61,13 +102,57 @@ contract('Resume', (accounts) => {
     })
   })
   // Occupation role list
-  context('Experience', () => {
+  context('Occupation', () => {
+    // Reset owner
+    before(async () => {
+      const instance = await Resume.deployed()
+      const owner = await instance.getOwner()
+      if (owner === ownerAccount) return
+      await instance.setOwner(ownerAccount, { from: owner })
+    })
     // Listing
-    it('should list a new occupation')
-    it('should fail to list an occupation when not authorized')
+    it('should list a new occupation', () => {
+      const { role, organization, description, link, location, startDate, endDate } = mockOccupationQuery.input
+      return Resume.deployed()
+        .then((instance) =>
+          instance.addOccupation(role, organization, description, link, location, startDate, endDate, { from: ownerAccount }),
+        )
+        .then(({ logs }) => assert.equal(logs[0].event, 'OccupationListed'))
+    })
+    it('should return an occupation', () => {
+      return Resume.deployed()
+        .then((instance) => instance.getOccupation(0))
+        .then((occupation) => assert.deepEqual(flattenTuple(occupation), mockOccupationQuery.result))
+    })
+    it('should fail to list an occupation when not authorized', () => {
+      const { role, organization, description, link, location, startDate, endDate } = mockOccupationQuery.input
+      return Resume.deployed()
+        .then((instance) =>
+          instance.addOccupation(role, organization, description, link, location, startDate, endDate, { from: maliciousAccount }),
+        )
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    it('should throw error when out of bounds', () => {
+      return Resume.deployed()
+        .then((instance) => instance.getOccupation(1000))
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    context('Details', () => {
+      it('should update an occupations details')
+      it("should fail to update details when occupation doesn't exist")
+      it('should fail to update details when not authorized')
+    })
     // Additional role description
     context('Description', () => {
-      it("should update the occupation's description")
+      xit("should update the occupation's description", async () => {
+        const mockUpdateResult = [...mockOccupationQuery.result]
+        const instance = await Resume.deployed()
+        await instance.updateOccupation(0, key, value, { from: ownerAccount })
+        const occupation = await instance.getOccupation(0)
+        assert.deepEqual(flattenTuple(occupation), mockUpdateResult)
+      })
       it('should fail to update description when not authorized')
       it('should fail to update description when greater than maximum length threshold')
     })
