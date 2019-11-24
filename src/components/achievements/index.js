@@ -8,7 +8,7 @@ const AchievementItem = (props) => (
   <div className='cell'>
     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
       <div style={{ fontWeight: 600 }}>{props.title}</div>
-      <Duration startTime={props.startTime} endTime={props.endDate} />
+      <Duration startTime={props.startTime} endTime={props.endTime} />
     </div>
     <div className={'description cell'}>{props.description}</div>
   </div>

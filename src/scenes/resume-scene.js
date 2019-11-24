@@ -1,12 +1,12 @@
 import React from 'react'
-import { Header, Experience, Education, Publications, Skills, Awards } from '../components'
+import { Header, Experience, Education, Publications, Skills, Achievements } from '../components'
 
 export const ResumeScene = (props) => (
   <div className='container'>
     <Header {...props} />
     <Experience occupations={props.occupations} />
     <Education education={props.education} />
-    <Awards awards={props.awards} />
+    <Achievements achievements={props.awards} />
     <Publications publications={props.publications} />
     <Skills
       skills={props.occupations

@@ -14,7 +14,7 @@ const EducationItem = (props) => (
     </div>
     <div style={{ flex: 'none' }} className={'occupation-detail cell'}>
       <div className={'occupation-location'}>{props.location}</div>
-      <Duration startDate={props.startDate} endDate={props.endDate} />
+      <Duration startTime={props.startTime} endTime={props.endTime} />
     </div>
   </div>
 )

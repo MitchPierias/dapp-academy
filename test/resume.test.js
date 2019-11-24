@@ -101,6 +101,42 @@ contract('Resume', (accounts) => {
       it('should fail list a link when not authorized')
     })
   })
+
+  context('Skills', () => {
+    it('should list a new skill')
+    it('should generate a unique identifier for skill')
+    it('should fail to list skill when already exists')
+    it('should fail to list skill when not authorized')
+    it('should get a skill for unique index')
+    it('should return a list of all skills')
+    it('should allow pagination of skills')
+    it('should delist a skill')
+    it('should remove references of skill when skill is delisted')
+    it('should fail to remove skill when not authorized')
+  })
+
+  context('Organizations', () => {
+    it('should insert a new organization', () => {
+      Resume.deployed()
+        .then((instance) => instance.addOrganization('Dominos Pizza Enterprises', '', 'thumb'))
+        .then(({ logs }) => assert.equal(logs[0].event, 'OrganizationCreated'))
+    })
+    it('should fail to get an organization out of range', () => {
+      return Resume.deployed()
+        .then((instance) => instance.getOrganization(1000))
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    it('should return an organization at index', async () => {
+      const instance = await Resume.deployed()
+      const org = await instance.getOrganization(0)
+      assert.deepEqual(flattenTuple(org), ['Dominos Pizza Enterprises', '', 'thumb'])
+    })
+    context('Name', () => {})
+    context('Image', () => {})
+    context('Location', () => {})
+    context('Link', () => {})
+  })
   // Occupation role list
   context('Occupation', () => {
     // Reset owner
@@ -183,25 +219,5 @@ contract('Resume', (accounts) => {
       it('should fail to update times when endTime occurs before startTime')
       it('should fail to update description when not authorized')
     })
-  })
-
-  context('Skills', () => {
-    it('should list a new skill')
-    it('should generate a unique identifier for skill')
-    it('should fail to list skill when already exists')
-    it('should fail to list skill when not authorized')
-    it('should get a skill for unique index')
-    it('should return a list of all skills')
-    it('should allow pagination of skills')
-    it('should delist a skill')
-    it('should remove references of skill when skill is delisted')
-    it('should fail to remove skill when not authorized')
-  })
-
-  context('Organizations', () => {
-    context('Name', () => {})
-    context('Image', () => {})
-    context('Location', () => {})
-    context('Link', () => {})
   })
 })

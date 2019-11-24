@@ -29,7 +29,7 @@ export const OccupationItem = (props) => (
     </div>
     <div style={{ flex: 'none' }} className={'occupation-detail cell'}>
       <div className={'occupation-location'}>{props.location}</div>
-      <Duration startDate={props.startTime} endDate={props.endTime} />
+      <Duration startTime={props.startTime} endTime={props.endTime} />
     </div>
   </div>
 )

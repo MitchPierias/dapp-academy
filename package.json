@@ -10,11 +10,14 @@
   "private": true,
   "scripts": {
     "start": "react-scripts start",
+    "start:chain": "truffle develop",
+    "deploy:chain": "truffle deploy",
     "build": "react-scripts build",
     "migrate": "truffle migrate",
-    "test": "truffle test"
+    "test": "truffle test --network test"
   },
   "dependencies": {
+    "drizzle": "^1.4.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.2",
@@ -22,5 +25,17 @@
   },
   "devDependencies": {
     "truffle": "^5.0.37"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

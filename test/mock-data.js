@@ -16,12 +16,12 @@ exports.mockOccupationQuery = {
     startDate: 1572087310,
     endDate: 1572163310,
   },
-  result: ['Software Engineer', 'Dominos Pizza Enterprises Limited', '', '', 'Brisbane, Australia', 1572087310, 1572163310],
+  result: ['Software Engineer', 'Dominos Pizza Enterprises', '', 0, 'Brisbane, Australia', 1572087310, 1572163310],
 }
 
 exports.mockOrganization = {
   id: 0,
-  name: 'Resume',
+  name: 'Dominos Pizza Enterprises',
   image: '',
   link: 'https://mitch.pierias.com',
 }
