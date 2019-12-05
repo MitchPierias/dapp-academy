@@ -60,6 +60,7 @@ contract Resume {
   event OccupationRemoved(string title);
   event OccupationSet(uint id, string role);
   event OrganizationCreated(uint atIndex, string name);
+  event ListedSkill(string skill, uint index);
 
   modifier onlyBy(address account) {
     // Check if caller address matches owner address
@@ -76,6 +77,18 @@ contract Resume {
   modifier whenOrganizationExists(uint atIndex) {
     // Check if the organization exists within the range
     require(atIndex >= 0 && atIndex < organizations.length);
+    _;
+  }
+
+  modifier whenSkillExists(uint atIndex) {
+    // Check skill index is within bounds
+    require(atIndex >= 0 && atIndex < skills.length);
+    _;
+  }
+
+  modifier whenUniqueSkill(string memory skill) {
+    // Check if the skill already listed
+    require(availableSkills[skill] == 0x0);
     _;
   }
 
@@ -207,5 +220,18 @@ contract Resume {
     // Ensure the endDate is greater than startDate
     // If no endDate, cast to null or undefined
     // Update state
+  }
+
+  function addSkill(string memory skill) public whenUniqueSkill(skill) payable onlyBy(owner) {
+    // Store skill and index
+    skills.push(skill);
+    availableSkills[skill] = skills.length;
+    // Broadcast listing
+    emit ListedSkill(skill, availableSkills[skill]);
+  }
+
+  function getSkill(uint atIndex) public whenSkillExists(atIndex) view returns (string memory) {
+    // Fetch skill at index
+    return skills[atIndex];
   }
 }

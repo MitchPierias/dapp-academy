@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const Resume = artifacts.require('Resume')
-const { mockName, mockSkills, mockOrganization, mockLocation, mockLink, mockOccupationQuery } = require('./mock-data')
+const { mockName, mockSkills, mockOrganization, mockLocation, mockOccupationQuery, mockOrganizationResponse } = require('./mock-data')
 
 const flattenTuple = (tuple) => Object.values(tuple).map((value) => ('object' === typeof value && value.words ? value.toNumber() : value))
 
@@ -118,10 +118,10 @@ contract('Resume', (accounts) => {
   context('Organizations', () => {
     it('should insert a new organization', () => {
       Resume.deployed()
-        .then((instance) => instance.addOrganization('Dominos Pizza Enterprises', '', 'thumb'))
+        .then((instance) => instance.addOrganization('Dominos Pizza Enterprises', 'thumb'))
         .then(({ logs }) => assert.equal(logs[0].event, 'OrganizationCreated'))
     })
-    it('should fail to get an organization out of range', () => {
+    it('should fail to get an Occup out of range', () => {
       return Resume.deployed()
         .then((instance) => instance.getOrganization(1000))
         .then(() => assert.fail('Expected error to be thrown'))
@@ -130,7 +130,7 @@ contract('Resume', (accounts) => {
     it('should return an organization at index', async () => {
       const instance = await Resume.deployed()
       const org = await instance.getOrganization(0)
-      assert.deepEqual(flattenTuple(org), ['Dominos Pizza Enterprises', '', 'thumb'])
+      assert.deepEqual(flattenTuple(org), mockOrganizationResponse)
     })
     context('Name', () => {})
     context('Image', () => {})
@@ -148,11 +148,9 @@ contract('Resume', (accounts) => {
     })
     // Listing
     it('should list a new occupation', () => {
-      const { role, organization, description, link, location, startDate, endDate } = mockOccupationQuery.input
+      const { role, organization, description, location, startDate, endDate } = mockOccupationQuery.input
       return Resume.deployed()
-        .then((instance) =>
-          instance.addOccupation(role, organization, description, link, location, startDate, endDate, { from: ownerAccount }),
-        )
+        .then((instance) => instance.addOccupation(role, organization, description, location, startDate, endDate, { from: ownerAccount }))
         .then(({ logs }) => assert.equal(logs[0].event, 'OccupationListed'))
     })
     it('should return an occupation', () => {
@@ -161,10 +159,10 @@ contract('Resume', (accounts) => {
         .then((occupation) => assert.deepEqual(flattenTuple(occupation), mockOccupationQuery.result))
     })
     it('should fail to list an occupation when not authorized', () => {
-      const { role, organization, description, link, location, startDate, endDate } = mockOccupationQuery.input
+      const { role, organization, description, location, startDate, endDate } = mockOccupationQuery.input
       return Resume.deployed()
         .then((instance) =>
-          instance.addOccupation(role, organization, description, link, location, startDate, endDate, { from: maliciousAccount }),
+          instance.addOccupation(role, organization, description, location, startDate, endDate, { from: maliciousAccount }),
         )
         .then(() => assert.fail('Expected error to be thrown'))
         .catch((error) => assert.include(error.message, 'revert'))
@@ -205,9 +203,22 @@ contract('Resume', (accounts) => {
     })
     // Skill reference list
     context('Skills', () => {
-      it('should contain a list of unique skill identifier references')
-      it('should list a unique skill when owner')
-      it('should fail to list skill reference when skill is already referenced')
+      it('should list a unique skill when owner', async () => {
+        const instance = await Resume.deployed()
+        await instance.addSkill(mockSkills[0])
+      })
+      it('should fetch a skill at a specified index', async () => {
+        const instance = await Resume.deployed()
+        const storedSkill = await instance.getSkill(0)
+        assert.equal(storedSkill, mockSkills[0])
+      })
+
+      it('should fail to list skill reference when skill is already referenced', () => {
+        return Resume.deployed()
+          .then((instance) => instance.addSkill(mockSkills[0]))
+          .then(() => assert.fail('Expected error to be thrown'))
+          .catch((error) => assert.include(error.message, 'revert'))
+      })
       it('should fail to list a skill when not authorized')
       it('should remove skill reference')
     })
