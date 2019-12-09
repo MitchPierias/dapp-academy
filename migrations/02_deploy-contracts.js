@@ -21,10 +21,10 @@ module.exports = async (deployer, environment) => {
       'Syndicate',
       'https://media.licdn.com/dms/image/C560BAQF5AkMuBYfpuw/company-logo_400_400/0?e=1577923200&v=beta&t=ZdFQty5GP7qj3oWqL0d8V_Za09wWyr6DpAk4HgvVFUY',
     )
-    await contract.addOccupation('Associate Software Engineer', 0, '', 0, 0, 0)
-    await contract.addOccupation('Associate Software Developer', 0, '', 0, 0, 0)
-    await contract.addOccupation('Full Stack Developer', 1, '', 0, 0, 0)
-    await contract.addOccupation('Software Engineer', 2, '', 0, 0, 0)
-    await contract.addOccupation('Blockchain Developer', 3, '', 0, 0, 0)
+    await contract.addOccupation('Associate Software Engineer', 0, 'Description', 0, 0, 0)
+    await contract.addOccupation('Associate Software Developer', 0, 'Description', 0, 0, 0)
+    await contract.addOccupation('Full Stack Developer', 1, 'Description', 0, 0, 0)
+    await contract.addOccupation('Software Engineer', 2, 'Description', 0, 0, 0)
+    await contract.addOccupation('Blockchain Developer', 3, 'Description', 0, 0, 0)
   }
 }

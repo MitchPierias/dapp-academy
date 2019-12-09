@@ -103,16 +103,36 @@ contract('Resume', (accounts) => {
   })
 
   context('Skills', () => {
-    it('should list a new skill')
-    it('should generate a unique identifier for skill')
-    it('should fail to list skill when already exists')
-    it('should fail to list skill when not authorized')
-    it('should get a skill for unique index')
-    it('should return a list of all skills')
-    it('should allow pagination of skills')
-    it('should delist a skill')
-    it('should remove references of skill when skill is delisted')
-    it('should fail to remove skill when not authorized')
+    xit('should list a new skill', async () => {
+      const instance = await Resume.deployed()
+      await instance.addSkill(mockSkills[0])
+    })
+    xit('should fail to list skill when already exists', () => {
+      return Resume.deployed()
+        .then((instance) => instance.addSkill(mockSkills[0]))
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    xit('should fail to list skill when not authorized', () => {
+      return Resume.deployed()
+        .then((instance) => instance.addSkill(mockSkills[0], { from: otherAccount }))
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    xit('should get a skill at a specified index', async () => {
+      const instance = await Resume.deployed()
+      const storedSkill = await instance.getSkill(0)
+      assert.equal(storedSkill, mockSkills[0])
+    })
+    xit('should delist a skill', async () => {
+      const instance = await Resume.deployed()
+      await instance.removeSkill(mockSkills[0])
+      return instance
+        .getSkill(0)
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    xit('should fail to delist a skill when not authorized')
   })
 
   context('Organizations', () => {
@@ -173,11 +193,6 @@ contract('Resume', (accounts) => {
         .then(() => assert.fail('Expected error to be thrown'))
         .catch((error) => assert.include(error.message, 'revert'))
     })
-    context('Details', () => {
-      it('should update an occupations details')
-      it("should fail to update details when occupation doesn't exist")
-      it('should fail to update details when not authorized')
-    })
     // Additional role description
     context('Description', () => {
       xit("should update the occupation's description", async () => {
@@ -190,11 +205,6 @@ contract('Resume', (accounts) => {
       it('should fail to update description when not authorized')
       it('should fail to update description when greater than maximum length threshold')
     })
-    // Project resource link
-    context('Link', () => {
-      it("should update the occupation's resource link")
-      it('should fail to update link when not authorized')
-    })
     // Linking an Organization
     context('Organization', () => {
       it("should update the occupation's organization reference")
@@ -205,20 +215,10 @@ contract('Resume', (accounts) => {
     context('Skills', () => {
       it('should list a unique skill when owner', async () => {
         const instance = await Resume.deployed()
-        await instance.addSkill(mockSkills[0])
+        await instance.addSkill(0, mockSkills[0])
       })
-      it('should fetch a skill at a specified index', async () => {
-        const instance = await Resume.deployed()
-        const storedSkill = await instance.getSkill(0)
-        assert.equal(storedSkill, mockSkills[0])
-      })
-
-      it('should fail to list skill reference when skill is already referenced', () => {
-        return Resume.deployed()
-          .then((instance) => instance.addSkill(mockSkills[0]))
-          .then(() => assert.fail('Expected error to be thrown'))
-          .catch((error) => assert.include(error.message, 'revert'))
-      })
+      it('should fetch a lists of skills for occupation')
+      it('should fail to list skill reference when skill is already referenced')
       it('should fail to list a skill when not authorized')
       it('should remove skill reference')
     })
