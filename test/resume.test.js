@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const Resume = artifacts.require('Resume')
-const { mockName, mockSkills, mockOrganization, mockLocation, mockLink, mockOccupationQuery } = require('./mock-data')
+const { mockName, mockSkills, mockOrganization, mockLocation, mockOccupationQuery, mockOrganizationResponse } = require('./mock-data')
 
 const flattenTuple = (tuple) => Object.values(tuple).map((value) => ('object' === typeof value && value.words ? value.toNumber() : value))
 
@@ -101,6 +101,62 @@ contract('Resume', (accounts) => {
       it('should fail list a link when not authorized')
     })
   })
+
+  context('Skills', () => {
+    xit('should list a new skill', async () => {
+      const instance = await Resume.deployed()
+      await instance.addSkill(mockSkills[0])
+    })
+    xit('should fail to list skill when already exists', () => {
+      return Resume.deployed()
+        .then((instance) => instance.addSkill(mockSkills[0]))
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    xit('should fail to list skill when not authorized', () => {
+      return Resume.deployed()
+        .then((instance) => instance.addSkill(mockSkills[0], { from: otherAccount }))
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    xit('should get a skill at a specified index', async () => {
+      const instance = await Resume.deployed()
+      const storedSkill = await instance.getSkill(0)
+      assert.equal(storedSkill, mockSkills[0])
+    })
+    xit('should delist a skill', async () => {
+      const instance = await Resume.deployed()
+      await instance.removeSkill(mockSkills[0])
+      return instance
+        .getSkill(0)
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    xit('should fail to delist a skill when not authorized')
+  })
+
+  context('Organizations', () => {
+    it('should insert a new organization', () => {
+      Resume.deployed()
+        .then((instance) => instance.addOrganization('Dominos Pizza Enterprises', 'thumb'))
+        .then(({ logs }) => assert.equal(logs[0].event, 'OrganizationCreated'))
+    })
+    it('should fail to get an Occup out of range', () => {
+      return Resume.deployed()
+        .then((instance) => instance.getOrganization(1000))
+        .then(() => assert.fail('Expected error to be thrown'))
+        .catch((error) => assert.include(error.message, 'revert'))
+    })
+    it('should return an organization at index', async () => {
+      const instance = await Resume.deployed()
+      const org = await instance.getOrganization(0)
+      assert.deepEqual(flattenTuple(org), mockOrganizationResponse)
+    })
+    context('Name', () => {})
+    context('Image', () => {})
+    context('Location', () => {})
+    context('Link', () => {})
+  })
   // Occupation role list
   context('Occupation', () => {
     // Reset owner
@@ -112,11 +168,9 @@ contract('Resume', (accounts) => {
     })
     // Listing
     it('should list a new occupation', () => {
-      const { role, organization, description, link, location, startDate, endDate } = mockOccupationQuery.input
+      const { role, organization, description, location, startDate, endDate } = mockOccupationQuery.input
       return Resume.deployed()
-        .then((instance) =>
-          instance.addOccupation(role, organization, description, link, location, startDate, endDate, { from: ownerAccount }),
-        )
+        .then((instance) => instance.addOccupation(role, organization, description, location, startDate, endDate, { from: ownerAccount }))
         .then(({ logs }) => assert.equal(logs[0].event, 'OccupationListed'))
     })
     it('should return an occupation', () => {
@@ -125,10 +179,10 @@ contract('Resume', (accounts) => {
         .then((occupation) => assert.deepEqual(flattenTuple(occupation), mockOccupationQuery.result))
     })
     it('should fail to list an occupation when not authorized', () => {
-      const { role, organization, description, link, location, startDate, endDate } = mockOccupationQuery.input
+      const { role, organization, description, location, startDate, endDate } = mockOccupationQuery.input
       return Resume.deployed()
         .then((instance) =>
-          instance.addOccupation(role, organization, description, link, location, startDate, endDate, { from: maliciousAccount }),
+          instance.addOccupation(role, organization, description, location, startDate, endDate, { from: maliciousAccount }),
         )
         .then(() => assert.fail('Expected error to be thrown'))
         .catch((error) => assert.include(error.message, 'revert'))
@@ -138,11 +192,6 @@ contract('Resume', (accounts) => {
         .then((instance) => instance.getOccupation(1000))
         .then(() => assert.fail('Expected error to be thrown'))
         .catch((error) => assert.include(error.message, 'revert'))
-    })
-    context('Details', () => {
-      it('should update an occupations details')
-      it("should fail to update details when occupation doesn't exist")
-      it('should fail to update details when not authorized')
     })
     // Additional role description
     context('Description', () => {
@@ -156,11 +205,6 @@ contract('Resume', (accounts) => {
       it('should fail to update description when not authorized')
       it('should fail to update description when greater than maximum length threshold')
     })
-    // Project resource link
-    context('Link', () => {
-      it("should update the occupation's resource link")
-      it('should fail to update link when not authorized')
-    })
     // Linking an Organization
     context('Organization', () => {
       it("should update the occupation's organization reference")
@@ -169,8 +213,11 @@ contract('Resume', (accounts) => {
     })
     // Skill reference list
     context('Skills', () => {
-      it('should contain a list of unique skill identifier references')
-      it('should list a unique skill when owner')
+      it('should list a unique skill when owner', async () => {
+        const instance = await Resume.deployed()
+        await instance.addSkill(0, mockSkills[0])
+      })
+      it('should fetch a lists of skills for occupation')
       it('should fail to list skill reference when skill is already referenced')
       it('should fail to list a skill when not authorized')
       it('should remove skill reference')
@@ -183,25 +230,5 @@ contract('Resume', (accounts) => {
       it('should fail to update times when endTime occurs before startTime')
       it('should fail to update description when not authorized')
     })
-  })
-
-  context('Skills', () => {
-    it('should list a new skill')
-    it('should generate a unique identifier for skill')
-    it('should fail to list skill when already exists')
-    it('should fail to list skill when not authorized')
-    it('should get a skill for unique index')
-    it('should return a list of all skills')
-    it('should allow pagination of skills')
-    it('should delist a skill')
-    it('should remove references of skill when skill is delisted')
-    it('should fail to remove skill when not authorized')
-  })
-
-  context('Organizations', () => {
-    context('Name', () => {})
-    context('Image', () => {})
-    context('Location', () => {})
-    context('Link', () => {})
   })
 })

@@ -10,18 +10,17 @@ exports.mockOccupationQuery = {
     id: 0,
     role: 'Software Engineer',
     description: '',
-    link: '',
     organization: 0,
     location: 0,
     startDate: 1572087310,
     endDate: 1572163310,
   },
-  result: ['Software Engineer', 'Dominos Pizza Enterprises Limited', '', '', 'Brisbane, Australia', 1572087310, 1572163310],
+  result: ['Software Engineer', 'Dominos Pizza Enterprises', 'thumb', '', 'Brisbane, Australia', 1572087310, 1572163310],
 }
 
 exports.mockOrganization = {
   id: 0,
-  name: 'Resume',
+  name: 'Dominos Pizza Enterprises',
   image: '',
   link: 'https://mitch.pierias.com',
 }
@@ -38,3 +37,5 @@ exports.mockLink = [
     url: 'https://www.linkedin.com/in/mitch-pierias/',
   },
 ]
+
+exports.mockOrganizationResponse = ['Dominos Pizza Enterprises', 'thumb']

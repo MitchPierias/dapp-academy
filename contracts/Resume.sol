@@ -2,18 +2,18 @@ pragma solidity >=0.4.0 <0.7.0;
 
 contract Resume {
 
-  address public owner = msg.sender;
-  string public name;
-  uint public profession;
-  uint public local;
+  address private owner = msg.sender;
+  string private name;
+  Location public locale;
+  Occupation public profession;
+  string constant seperator = ", ";
   Availability public status;
   string[] public skills;
-  Link[] links;
   Occupation[] experience;
+  Organization[] organizations;
+  Location[] locations;
   
-  mapping(string => string) availableSkills;
-  mapping(uint => Location) locations;
-  mapping(uint => Organization) organizations;
+  mapping(string => uint) availableSkills;
 
   enum Availability {
     Unavilable,
@@ -33,65 +33,75 @@ contract Resume {
     Doctorates
   }
 
+  enum RoleType {
+    Professional,
+    Education,
+    Award,
+    Publication
+  }
+
   struct Occupation {
     uint index;
-    string role;
-    string employer;
-    string decription;
-    string link;
-    Location location;
+    RoleType role;
+    string title;
+    uint employer_index;
+    string description;
+    uint location_index;
     uint start_date;
     uint end_date;
     string[] skills;
   }
 
   struct Organization {
-    uint id;
+    uint index;
     string name;
-    string nickname;
-    string link;
-    string image;
-    Location location;
+    string thumb;
   }
 
   struct Location {
-    uint id;
     string city;
     string country;
   }
 
-  struct Link {
-    uint id;
-    string url;
-  }
-
-  event OccupationListed(uint atIndex, string title);
+  event EducationListed(uint atIndex, string title, string organisation);
+  event OccupationListed(uint atIndex, string title, string organisation);
   event OccupationChanged(uint atIndex, string fields);
   event OccupationRemoved(string title);
-  event OccupationSet(uint id, string role);
+  event OccupationSet(uint id, string title);
+  event OrganizationCreated(uint atIndex, string name);
+  event ListedSkill(string skill, uint index);
 
-  modifier whenOwner() {
+  modifier onlyBy(address account) {
     // Check if caller address matches owner address
-    require(msg.sender == owner);
-    _;
-  }
-
-  modifier whenUniqueOrganisation(uint id) {
-    // Check the organisation has already been stored
+    require(msg.sender == account);
     _;
   }
 
   modifier whenOccupationExists(uint atIndex) {
     // Check if the occupation exists at the specified index
+    require(atIndex >= 0 && atIndex < experience.length);
     _;
   }
 
-  modifier whenOrganizationExists(uint withID) {
-    // Check if the organization exists withe the specified id
+  modifier whenOrganizationExists(uint atIndex) {
+    // Check if the organization exists within the range
+    require(atIndex >= 0 && atIndex < organizations.length);
     _;
   }
 
-  function setOwner(address newOwner) public whenOwner {
+  modifier whenSkillExists(uint atIndex) {
+    // Check skill index is within bounds
+    require(atIndex >= 0 && atIndex < skills.length);
+    _;
+  }
+
+  modifier whenUniqueSkill(string memory skill) {
+    // Check if the skill already listed
+    require(availableSkills[skill] == 0x0);
+    _;
+  }
+
+  function setOwner(address newOwner) public onlyBy(owner) {
     require(newOwner != owner);
     owner = newOwner;
   }
@@ -100,17 +110,74 @@ contract Resume {
     return owner;
   }
 
-  function addOccupation() public whenOwner payable {
-    // Construct occupation object
-    // List occupation object
-    // Notify occupation listing
+  function setName(string memory newName) public onlyBy(owner) payable {
+    require(bytes(newName).length > 0);
+    name = newName;
   }
 
-  function setOccupation(uint withIndex) public whenOccupationExists(withIndex) payable whenOwner {
+  function getName() public view returns (string memory) {
+    return name;
+  }
+
+  function setLocation(string memory city, string memory country) public onlyBy(owner) payable {
+    require(bytes(city).length > 0 && bytes(country).length > 0);
+    locale = Location(city, country);
+  }
+
+  function getLocation() public view returns (string memory) {
+    bytes memory city = bytes(locale.city);
+    bytes memory divider = bytes(seperator);
+    bytes memory country = bytes(locale.country);
+    bytes memory temp = new bytes(city.length + divider.length + country.length);
+
+    uint counter;
+    uint index;
+    for (index = 0; index < city.length; index++) {
+      temp[counter++] = city[index];
+    }
+    for (index = 0; index < divider.length; index++) {
+      temp[counter++] = divider[index];
+    }
+    for (index = 0; index < country.length; index++) {
+      temp[counter++] = country[index];
+    }
+
+    return string(temp);
+  }
+
+  function addEducation(string memory title, uint employerIndex, string memory description,  uint locationIndex, uint startDate, uint endDate) public onlyBy(owner) whenOrganizationExists(employerIndex) payable {
+    // Validate occupation data
+    // Create skill list
+    string[] memory skillList;
+    uint atIndex = experience.length;
+    string memory orgName = organizations[employerIndex].name;
+    // Construct occupation object
+    Occupation memory job = Occupation(atIndex, RoleType.Education, title, employerIndex, description, locationIndex, startDate, endDate, skillList);
+    // List occupation object
+    experience.push(job);
+    // Notify occupation listing
+    emit OccupationListed(atIndex, job.title, orgName);
+  }
+
+  function addOccupation(string memory title, uint employerIndex, string memory description,  uint locationIndex, uint startDate, uint endDate) public onlyBy(owner) whenOrganizationExists(employerIndex) payable {
+    // Validate occupation data
+    // Create skill list
+    string[] memory skillList;
+    uint atIndex = experience.length;
+    string memory orgName = organizations[employerIndex].name;
+    // Construct occupation object
+    Occupation memory job = Occupation(atIndex, RoleType.Professional, title, employerIndex, description, locationIndex, startDate, endDate, skillList);
+    // List occupation object
+    experience.push(job);
+    // Notify occupation listing
+    emit OccupationListed(atIndex, job.title, orgName);
+  }
+
+  function setOccupation(uint withIndex) public whenOccupationExists(withIndex) payable onlyBy(owner) {
     // Set the position to the occupation index
   }
 
-  function updateOccupation(uint atIndex) public whenOccupationExists(atIndex) payable whenOwner {
+  function updateOccupation(uint atIndex) public whenOccupationExists(atIndex) payable onlyBy(owner) {
     // Fetch the existing occupation at index
     // Set fields which have changed
       // Capture change field name
@@ -118,37 +185,84 @@ contract Resume {
     // Notify of field changes
   }
 
-  function getOccupation(uint atIndex) public returns (string memory, uint, string memory, string memory, string memory, uint, uint, string memory) {
+  function getOccupation(uint atIndex) public whenOccupationExists(atIndex) view returns (string memory, string memory, string memory, string memory, string memory, uint, uint) {
     // Fetch the occupation matching at the specified index
     // Fetch the occupations location
       // Stringify location into the format "CITY, COUNTRY"
     // Search and replace skill identifiers to skill names
       // Stringify skills with delimiter
     // Return tuple of occupation data
-      // (role, employer, description, link, locationString, startDate, endDate, skillCollection);
+      // (title, employer, thumb, description, locationString, startDate, endDate, skillCollection);
+    Occupation memory job = experience[atIndex];
+    //Organization memory org = organizations[job.employer_index];
+    //Location memory geo = locations[job.location_index];
+    string memory orgName = organizations[job.employer_index].name;
+    string memory orgThumb = organizations[job.employer_index].thumb;
+    string memory roleLocation = "Brisbane, Australia";
+    return (job.title, orgName, orgThumb, job.description, roleLocation, job.start_date, job.end_date);
   }
 
-  function removeOccupation(uint atIndex) public whenOccupationExists(atIndex) payable whenOwner {
+  function countOccupations() public view returns (uint) {
+    return experience.length;
+  }
+
+  function removeOccupation(uint atIndex) public whenOccupationExists(atIndex) payable onlyBy(owner) {
     // Removes the occupation at index
     // Sets position to previous index when removed occupation is current
   }
 
-  function addOrganization(uint id) public whenUniqueOrganisation(id) payable whenOwner  {
+  function addOrganization(string memory orgName, string memory thumb) public payable onlyBy(owner)  {
+    // Capture the next available index
+    uint index = organizations.length;
+    // Initialize a new organization
+    Organization memory org = Organization(index, orgName, thumb);
+    // Store organization and notify
+    organizations.push(org);
+    emit OrganizationCreated(index, org.name);
+  }
+
+  function updateOrganization(uint withID) public whenOccupationExists(withID) payable onlyBy(owner) {
 
   }
 
-  function updateOrganization(uint withID) public whenOccupationExists(withID) payable whenOwner {
+  function removeOrganization(uint withID) public whenOrganizationExists(withID) payable onlyBy(owner) {
 
   }
 
-  function removeOrganization(uint withID) public whenOrganizationExists(withID) payable whenOwner {
-
+  function getOrganization(uint atIndex) public whenOrganizationExists(atIndex) view returns (string memory, string memory) {
+    Organization memory org = organizations[atIndex];
+    return (org.name, org.thumb);
   }
 
-  function updateOccupationTimeline(uint atIndex, uint startDate, uint endDate) public whenOccupationExists(atIndex) payable whenOwner {
+  function countOrganizations() public view returns (uint) {
+    return organizations.length;
+  }
+
+  function updateOccupationTimeline(uint atIndex, uint startDate, uint endDate) public whenOccupationExists(atIndex) payable onlyBy(owner) {
     // Validate startDate exists
     // Ensure the endDate is greater than startDate
     // If no endDate, cast to null or undefined
     // Update state
+  }
+
+  function addSkill(uint atIndex, string memory skill) public whenOccupationExists(atIndex) payable onlyBy(owner) {
+    // Store skill and reference
+    Occupation storage occupation = experience[atIndex];
+    occupation.skills.push(skill);
+    // Broadcast listing
+    emit ListedSkill(skill, occupation.skills.length - 1);
+  }
+
+  function getSkill(uint atIndex) public whenSkillExists(atIndex) view returns (string memory) {
+    // Fetch skill at index
+    return skills[atIndex];
+  }
+
+  function removeSkill(string memory skill) public payable onlyBy(owner) {
+    uint atIndex = availableSkills[skill];
+    assert(atIndex == 0x0);
+    // Clear the skill and reference
+    delete skills[atIndex];
+    delete availableSkills[skill];
   }
 }

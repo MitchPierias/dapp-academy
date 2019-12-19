@@ -1,9 +1,14 @@
 import React from 'react'
 
 export const Thumbnail = (props) => {
+
+  if (!props.src) {
+    return null
+  }
+  
   return (
-    <div className='thumbnail cell'>
-      <img style={{ width: '50px', flex: 'none', marginTop: '12px', marginRight: '12px' }} src={props.src} />
+    <div className='thumbnail'>
+      <img src={props.src} />
     </div>
   )
 }

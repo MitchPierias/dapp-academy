@@ -22,7 +22,7 @@ header {
 section {
   width: 100%;
   max-width: 800px;
-  padding: 8px 12px;
+  padding: 8px 5vmin;
 }
 
 h2 {
@@ -52,6 +52,13 @@ a:visited {
 
 .cell {
   padding: 3px;
+  flex:7;
+}
+
+.col {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .container {
@@ -63,67 +70,67 @@ a:visited {
   margin: auto;
 }
 
-.occupation {
-  padding: 3px;
-  margin: 3px;
+.row-container {
+  margin: 1vmin 0px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .thumbnail {
   display: flex;
-  flex: 1;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  align-content: center;
+  padding: 0.5vmin 2vmin 0.5vmin 0.5vmin;
 }
 
-*[class^='title'] {
+.thumbnail img {
+  width: 5vmin;
+  min-width: 40px;
+  max-width: 60px;
+  flex: none;
+  border-radius: 4px;
+}
+
+.content {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.title {
   font-weight: 600;
 }
 
-.occupation-organization {
+.subtitle {
   font-size: 1.1rem;
   padding-left: 0px;
   margin-left: 0px;
+  padding:2px 3px;
 }
 
-*[class^='description'] {
+.description {
   font-size: 0.9rem;
+  font-weight: 400;
   color: #616161;
-}
-
-.occupation-skills {
-  font-size: 0.9rem;
-  font-weight: 300;
   padding: 3px;
   margin: 3px;
 }
 
-.occupation-skills::after {
-  content: ' \2022 ';
-}
-
-.occupation-skill-tag:first-child {
-  padding-left: 0px;
-}
-
-.occupation-skill-tag:last-child {
-  padding-right: 0px;
-}
-
-.occupation-detail {
+.detail {
+  flex:'none';
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-end;
 }
 
-.occupation-location {
+.location {
   font-weight: 600;
 }
-
-.occupation-timeline {
+.timeline {
   font-size: 0.9rem;
   font-weight: 400;
 }
@@ -131,6 +138,9 @@ a:visited {
 .skills {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
 
 .skill-item {
@@ -145,6 +155,13 @@ a:visited {
   justify-content: center;
   align-items: center;
   user-select: none;
+}
+
+.skill-item-count {
+  font-size: 13px;
+  margin-left: 8px;
+  font-weight: 600;
+  text-align: center;
 }
 
 .skill-item:hover {
