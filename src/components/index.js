@@ -1,6 +1,2 @@
 export * from './header'
-export * from './experience'
-export * from './publications'
 export * from './skills'
-export * from './achievements'
-export * from './education'
