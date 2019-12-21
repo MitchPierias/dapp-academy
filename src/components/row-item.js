@@ -1,6 +1,7 @@
 import React from 'react'
 import { Thumbnail } from "./thumbnail";
 import { Duration } from "./duration";
+import { RowItemDescription } from "./row-item-description";
 
 export const RowItem = (props) =>  (
     <div className={'row-container'}>
@@ -16,7 +17,7 @@ export const RowItem = (props) =>  (
                     <Duration startTime={props.startTime} endTime={props.endTime} />
                 </div>
             </div>
-            {props.description && <div className={'description'}>{props.description}</div>}
+            {props.description && <RowItemDescription content={props.description}/>}
         </div>
     </div>
 )
