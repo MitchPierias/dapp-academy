@@ -47,7 +47,7 @@ const groupWithKey = (arr, key) =>
   }, [])
 
 const PublicationItem = (props) => (
-  <RowItem title={props.publisher} subtitle={'iterate publications and collect `title`'} startTime={props.startTime} endTime={props.endTime}/>
+  <RowItem title={props.publisher} subtitle={props.data.map(pub => pub.title)} startTime={props.startTime} endTime={props.endTime}/>
 )
 
 const AchievementItem = (props) => (
