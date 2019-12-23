@@ -5,20 +5,41 @@ exports.mockLocation = {
   country: 'Australia',
 }
 
+exports.ROLE_TYPE = [
+  'Professional',
+  'Education',
+  'Award',
+  'Community',
+  'Publication'
+]
+
 exports.mockOccupationQuery = {
   input: {
     id: 0,
-    role: 'Software Engineer',
+    role: 'Associate Software Engineer',
     description: '',
-    organization: 0,
+    entity: 0,
     location: 0,
     startDate: 1572087310,
     endDate: 1572163310,
   },
-  result: ['Software Engineer', 'Dominos Pizza Enterprises', 'thumb', '', 'Brisbane, Australia', 1572087310, 1572163310],
+  result: [this.ROLE_TYPE.indexOf('Professional'), 'Associate Software Engineer', 'Dominos Pizza Enterprises', 'http://www.logotypes101.com/logos/685/E9C962994FA4A42D91A2A110B4FC8F84/dominospizza.png', 'Description', 'Brisbane, Australia', 1568278800, 0],
 }
 
-exports.mockOrganization = {
+exports.mockEducationQuery = {
+  input: {
+    id: 0,
+    role: 'Computational Neuroscience',
+    description: '',
+    entity: 1,
+    location: 0,
+    startDate: 1572087310,
+    endDate: 1572163310,
+  },
+  result: [this.ROLE_TYPE.indexOf('Education'), 'Computational Neuroscience', 'University of Washington', 'https://media.licdn.com/dms/image/C4D0BAQEMmhF9TqUCgA/company-logo_400_400/0?e=1577923200&v=beta&t=dSv-VAvSHUGA3fQOH7MLiQSIdY2P4_BUdt2nDHmL-zw', '', 'Brisbane, Australia', 1416060000, 1421330400],
+}
+
+exports.mockEntity = {
   id: 0,
   name: 'Dominos Pizza Enterprises',
   image: '',
@@ -38,4 +59,4 @@ exports.mockLink = [
   },
 ]
 
-exports.mockOrganizationResponse = ['Dominos Pizza Enterprises', 'thumb']
+exports.mockEntityResponse = ['Dominos Pizza Enterprises', 'thumb']
