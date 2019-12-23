@@ -50,6 +50,14 @@ a:visited {
   text-decoration: none;
 }
 
+button {
+  font-size: 0.9rem;
+  padding:12px 8px;
+  border:none;
+  outline:none;
+  border-radius:6px;
+}
+
 .cell {
   padding: 3px;
   flex:7;
@@ -115,6 +123,11 @@ a:visited {
   color: #616161;
   padding: 3px;
   margin: 3px;
+  list-style-type: none;
+}
+
+.description li {
+  padding: 3px;
 }
 
 .detail {
@@ -161,17 +174,4 @@ a:visited {
   margin-left: 8px;
   font-weight: 600;
   text-align: center;
-}
-
-.skill-item:hover {
-  background-color: #eeeeee;
-  cursor: pointer;
-}
-
-.bullet {
-  width: 4px;
-  height: 4px;
-  border-radius: 2px;
-  background-color: black;
-  display: inline-block;
 }
