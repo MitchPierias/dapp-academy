@@ -4,7 +4,7 @@ module.exports = async (deployer, environment) => {
   // Deploy the resume contract
   await deployer.deploy(Resume)
   // Populate data when not development
-  if (environment !== 'test') {
+  if (environment === 'development') {
     const contract = await Resume.deployed()
     await contract.setName('Mitch Pierias')
     await contract.setLocation('Brisbane', 'Australia')
@@ -13,6 +13,11 @@ module.exports = async (deployer, environment) => {
     await contract.addLocation('Sydney', 'Australia')
     await contract.addLocation('Gold Coast', 'Australia')
     await contract.addLocation('Valetta', 'Malta')
+
+    await contract.addLink('Email', 'mitch@pierias.com')
+    await contract.addLink('Phone', '0431 536 911')
+    await contract.addLink('LinkedIn', 'https://www.linkedin.com/in/mitch-pierias/')
+    await contract.addLink('GitHub', 'https://github.com/MitchPierias')
 
     await contract.addEntity(
       'Dominos Pizza Enterprises',
@@ -29,7 +34,7 @@ module.exports = async (deployer, environment) => {
     )
     await contract.addEntity(
       'Agora',
-      'https://agora.pierias.com/static/cffa1a80d2e19c6f3df9e3194f014fdb/7f2ee/64x64.png',
+      './agora.jpg',
     )
     await contract.addEntity(
       'University of Washington',
@@ -55,12 +60,12 @@ module.exports = async (deployer, environment) => {
     await contract.addEntity('Startup Catalyst', '')
     await contract.addEntity('Global Startup Weekend', '')
 
-    await contract.addOccupation('Associate Software Engineer', 0, 'Description', 0, 1568278800, 0)
-    await contract.addOccupation('Associate Software Developer', 0, 'Description', 0, 1564995600, 1568278800)
-    await contract.addOccupation('Full Stack Developer', 1, 'Description', 0, 1556528400, 1564894800)
-    await contract.addOccupation('Software Engineer', 2, 'Description', 1, 1556084578, 0)
-    await contract.addOccupation('Blockchain Developer', 3, 'Description', 3, 0, 0)
-    await contract.addOccupation('Full Stack Blockchain Developer', 4, 'Description', 0, 0, 0)
+    await contract.addOccupation('Associate Software Engineer', 0, 'Description', 0, 1568278800, 0, 'React, TypeScript')
+    await contract.addOccupation('Associate Software Developer', 0, 'Description', 0, 1564995600, 1568278800, 'React Native, TypeScript')
+    await contract.addOccupation('Full Stack Developer', 1, 'Description', 0, 1556528400, 1564894800, 'React, Lambda, NodeJS, TypeScript')
+    await contract.addOccupation('Software Engineer', 2, 'Description', 1, 1556084578, 0, 'TypeScript')
+    await contract.addOccupation('Blockchain Developer', 3, 'Description', 3, 0, 0, 'EOSIO, TypeScript, React, IPFS')
+    await contract.addOccupation('Full Stack Blockchain Developer', 4, 'Description', 0, 0, 0, 'EOSIO, TypeScript, React, IPFS')
 
     await contract.addEducation('Full Stack Javascript Developer', 6, '', 0, 1516024800, 1547560800)
     await contract.addEducation('Computational Neuroscience', 5, '', 0, 1416060000, 1421330400)

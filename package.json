@@ -10,11 +10,11 @@
   "private": true,
   "scripts": {
     "start": "react-scripts start",
-    "start:chain": "truffle develop",
+    "start:chain": "truffle develop --network development",
     "deploy:chain": "truffle deploy",
     "build": "react-scripts build",
     "migrate": "truffle migrate",
-    "test": "truffle test --network test"
+    "test": "truffle test --network testing"
   },
   "dependencies": {
     "drizzle": "^1.4.0",
