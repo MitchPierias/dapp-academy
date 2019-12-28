@@ -1,13 +1,12 @@
 /* eslint-disable no-undef */
 const Resume = artifacts.require('Resume')
-const { mockName, mockSkills, mockOrganization, mockLocation, mockOccupationQuery, mockOrganizationResponse } = require('./mock-data')
+const { mockDetailsInput, mockDetails, mockDetailsEmpty, mockDetailsNameOnly, mockLocation, mockLocationInput } = require('../mock-data')
 
 const flattenTuple = (tuple) => Object.values(tuple).map((value) => ('object' === typeof value && value.words ? value.toNumber() : value))
 
 contract('Resume', (accounts) => {
   const ownerAccount = accounts[0]
-  const otherAccount = accounts[1]
-  const maliciousAccount = accounts[2]
+  const maliciousAccount = accounts[1]
   // Individual's current details
   context('Details', () => {
     // Reset owner
@@ -19,15 +18,22 @@ contract('Resume', (accounts) => {
     })
     // Individual's full name
     context('Name', () => {
+
+      it('should return empty details by default', async () => {
+        const instance = await Resume.new()
+        const details = await instance.getDetails()
+        return assert.deepEqual(flattenTuple(details), mockDetailsEmpty)
+      })
+
       it("should update the individual's full name", async () => {
-        const instance = await Resume.deployed()
-        await instance.setName(mockName, { from: ownerAccount })
-        const name = await instance.getName()
-        return assert.equal(name, mockName)
+        const instance = await Resume.new()
+        await instance.setName(mockDetailsInput.name, { from: ownerAccount })
+        const details = await instance.getDetails()
+        return assert.deepEqual(flattenTuple(details), mockDetailsNameOnly)
       })
       it('should fail to set name field when not authorized', () => {
         return Resume.deployed()
-          .then((instance) => instance.setName(mockName, { from: maliciousAccount }))
+          .then((instance) => instance.setName(mockDetailsInput.name, { from: maliciousAccount }))
           .then(() => assert.fail('Expected error to be thrown'))
           .catch((error) => assert.include(error.message, 'revert'))
       })
@@ -41,14 +47,14 @@ contract('Resume', (accounts) => {
     // Current location
     context('Location', () => {
       it("should update the individual's location field", async () => {
-        const { city, country } = mockLocation
+        const { city, country } = mockLocationInput
         const instance = await Resume.deployed()
         await instance.setLocation(city, country)
         const location = await instance.getLocation()
-        return assert.equal(location, `${city}, ${country}`)
+        return assert.equal(location, mockLocation)
       })
       it('should fail to set location field when not authorized', () => {
-        const { city, country } = mockLocation
+        const { city, country } = mockLocationInput
         return Resume.deployed()
           .then((instance) => instance.setLocation(city, country, { from: maliciousAccount }))
           .then(() => assert.fail('Expected error to be thrown'))
