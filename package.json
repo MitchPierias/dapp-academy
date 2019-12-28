@@ -11,10 +11,12 @@
   "scripts": {
     "start": "react-scripts start",
     "start:chain": "truffle develop --network development",
-    "deploy:chain": "truffle deploy",
-    "build": "react-scripts build",
-    "migrate": "truffle migrate",
-    "test": "truffle test --network testing"
+    "build": "yarn build:contracts; react-scripts build",
+    "build:contracts": "truffle build",
+    "deploy": "yarn deploy:contracts",
+    "deploy:contracts": "truffle deploy",
+    "migrate:contracts": "truffle migrate",
+    "test:contracts": "truffle test --network testing"
   },
   "dependencies": {
     "drizzle": "^1.4.0",
