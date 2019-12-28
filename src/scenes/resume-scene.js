@@ -1,30 +1,17 @@
 import React from 'react'
-import { SectionList } from "../components/section-list";
-import { RowItem } from "../components/row-item";
-import { Header, Skills } from '../components'
+import {
+  Header, SkillList, SectionList, RowItem
+} from '../components'
 
 export const ResumeScene = (props) => (
   <div className='container'>
-    <Header {...props} />
-    <SectionList
-      title={'Experience'}
-      items={
-        (props.filters &&
-          props.occupations.filter((occupation) => occupation.skills.find((skill) => props.filters.find((filter) => filter === skill)))) ||
-        props.occupations
-      }
-      renderItem={OccupationItem}
-    />
+    <Header name={props.fullName} profession={props.profession} location={props.location} links={props.links} />
+    <SectionList title={'Experience'} items={props.occupations} renderItem={OccupationItem} />
     <SectionList title={'Education'} items={props.education} renderItem={EducationItem} />
     <SectionList title={'Achievements'} items={props.awards} renderItem={AchievementItem} />
-    <SectionList title={'Publications'} items={groupWithKey(props.publications, 'publisher')} renderItem={PublicationItem} />
-    <Skills
-      skills={props.occupations
-        .reduce((result, occupation) => [...result, ...occupation.skills], [])
-        .map((item) => ({
-          label: item,
-        }))}
-    />
+    <SectionList title={'Community'} items={props.community} renderItem={CommunityItem} />
+    <SectionList title={'Publications'} items={groupByKey(props.publications, 'publisher')} renderItem={PublicationItem} />
+    <SkillList skills={props.occupations.reduce((result, occupation) => [...result, ...occupation.skills], [])} />
   </div>
 )
 
@@ -34,27 +21,31 @@ export const OccupationItem = (props) => (
 
 const getSkillText = (skills) => ('string' === typeof skills ? skills : skills instanceof Array ? skills.join(' • ') : null)
 
-const groupWithKey = (arr, key) =>
+const groupByKey = (arr, key) =>
   arr.reduce((memo, publication) => {
     const prevIndex = memo.length - 1
     if (prevIndex >= 0 && memo[prevIndex][key] === publication[key]) {
       memo[prevIndex].data.push(publication)
-      memo[prevIndex].startTime = publication.timePublished
+      memo[prevIndex].endTime = publication.endTime
     } else {
       memo.push({ [key]: publication[key], data: [publication], endTime: publication.timePublished })
     }
     return memo
   }, [])
 
+const CommunityItem = (props) => (
+  <RowItem title={props.title} subtitle={props.organization} description={props.description} startTime={props.startTime} endTime={props.endTime} />
+)
+
 const PublicationItem = (props) => (
-  <RowItem title={props.publisher} subtitle={props.data.map(pub => pub.title)} startTime={props.startTime} endTime={props.endTime}/>
+  <RowItem title={props.publisher} description={props.data.map(pub => pub.title)} endTime={props.endTime} />
 )
 
 const AchievementItem = (props) => (
-  <RowItem title={props.title} description={props.description} startTime={props.startTime} endTime={props.endTime}/>
+  <RowItem title={props.title} description={props.description} startTime={props.startTime} endTime={props.endTime} />
 )
 
 const EducationItem = (props) => (
-  <RowItem thumb={props.thumb} title={props.field} subtitle={props.organization} location={props.location} startTime={props.startTime} endTime={props.endTime}/>
+  <RowItem thumb={props.thumb} title={props.field} subtitle={props.organization} location={props.location} startTime={props.startTime} endTime={props.endTime} />
 )
 
