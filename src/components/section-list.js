@@ -9,6 +9,6 @@ import React from 'react'
 export const SectionList = (props) => (
   <section>
     <h3>{props.title}</h3>
-    <article>{props.items && props.items.map((data) => React.createElement(props.renderItem, data))}</article>
+    <article>{props.items && props.items.map((data, idx) => React.createElement(props.renderItem, { key: idx, ...data }))}</article>
   </section>
 )
