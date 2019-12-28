@@ -1,6 +1,7 @@
 pragma solidity >=0.4.0 <0.7.0;
 
 library StringTools {
+
   function concat(string memory a, string memory b) public pure returns (string memory) {
     bytes memory tmpA = bytes(a);
     bytes memory tmpB = bytes(b);
