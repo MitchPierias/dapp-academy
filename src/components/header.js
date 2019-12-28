@@ -5,27 +5,16 @@ import React from 'react'
  * name, links, current profession and location.
  */
 export const Header = (props) => (
-  <header className='row'>
-    <h1>{props.fullName}</h1>
+  <header>
+    <h1>{props.name}</h1>
     <h2>{props.profession}</h2>
-    <p>{props.location}</p>
-    <div className='row' style={styles.contactDetails}>
-      <div style={styles.contactDetailItem}>mitch@pierias.com</div>
-      <div>|</div>
-      <div style={styles.contactDetailItem}>0431 536 911</div>
-      <div>|</div>
-      <a href='https://www.linkedin.com/in/mitch-pierias/' style={styles.contactDetailItem}>
-        LinkedIn
-      </a>
-      <div>|</div>
-      <a href='https://github.com/MitchPierias' style={styles.contactDetailItem}>
-        GitHub
-      </a>
+    <h3>{props.location}</h3>
+    <div className='skills'>
+      {props.links.map((link, idx) => (
+        <a key={idx} className={'skill-item'} href={link.url}>
+          {link.label}
+        </a>
+      ))}
     </div>
   </header>
 )
-
-const styles = {
-  contactDetails: { display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', padding: '12px' },
-  contactDetailItem: { padding: '0px 2%' },
-}
