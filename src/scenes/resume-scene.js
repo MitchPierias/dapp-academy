@@ -10,7 +10,7 @@ export const ResumeScene = (props) => (
     <SectionList title={'Education'} items={props.education} renderItem={EducationItem} />
     <SectionList title={'Achievements'} items={props.awards} renderItem={AchievementItem} />
     <SectionList title={'Community'} items={props.community} renderItem={CommunityItem} />
-    <SectionList title={'Publications'} items={groupByKey(props.publications, 'publisher')} renderItem={PublicationItem} />
+    <SectionList title={'Publications'} items={groupByKey(props.publications, 'organization')} renderItem={PublicationItem} />
     <SkillList skills={props.occupations.reduce((result, occupation) => [...result, ...occupation.skills], [])} />
   </div>
 )
@@ -34,18 +34,18 @@ const groupByKey = (arr, key) =>
   }, [])
 
 const CommunityItem = (props) => (
-  <RowItem title={props.title} subtitle={props.organization} description={props.description} startTime={props.startTime} endTime={props.endTime} />
+  <RowItem title={props.role} subtitle={props.organization} description={props.description} startTime={props.startTime} endTime={props.endTime} />
 )
 
 const PublicationItem = (props) => (
-  <RowItem title={props.publisher} description={props.data.map(pub => pub.title)} endTime={props.endTime} />
+  <RowItem title={props.organization} description={props.data.map(pub => pub.role)} endTime={props.endTime} />
 )
 
 const AchievementItem = (props) => (
-  <RowItem title={props.title} description={props.description} startTime={props.startTime} endTime={props.endTime} />
+  <RowItem title={props.role} description={props.description} startTime={props.startTime} endTime={props.endTime} />
 )
 
 const EducationItem = (props) => (
-  <RowItem thumb={props.thumb} title={props.field} subtitle={props.organization} location={props.location} startTime={props.startTime} endTime={props.endTime} />
+  <RowItem thumb={props.thumb} title={props.role} subtitle={props.organization} location={props.location} startTime={props.startTime} endTime={props.endTime} />
 )
 

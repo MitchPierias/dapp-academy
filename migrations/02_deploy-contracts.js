@@ -21,32 +21,28 @@ module.exports = async (deployer, environment) => {
 
     await contract.addEntity(
       'Dominos Pizza Enterprises',
-      'http://www.logotypes101.com/logos/685/E9C962994FA4A42D91A2A110B4FC8F84/dominospizza.png',
+      'https://github-doc-sources.s3-ap-southeast-2.amazonaws.com/afe997889cc1864ce3e538594a3f474ca32ef47e071f3fd4e3d67fd0b3661515.jpg',
     )
     await contract.addEntity(
       'Credit Union Australia',
-      'https://media.glassdoor.com/sql/624191/credit-union-australia-squarelogo-1547422687793.png',
+      'https://github-doc-sources.s3-ap-southeast-2.amazonaws.com/cc71991f59c66e89c47c90393971d1e4b05b99078adade985b5da78d57059747.jpg',
     )
-    await contract.addEntity('Lamington', './lamington.jpg')
-    await contract.addEntity(
-      'Syndicate',
-      'https://media.licdn.com/dms/image/C560BAQF5AkMuBYfpuw/company-logo_400_400/0?e=1577923200&v=beta&t=ZdFQty5GP7qj3oWqL0d8V_Za09wWyr6DpAk4HgvVFUY',
-    )
+    await contract.addEntity('Lamington', 'https://github-doc-sources.s3-ap-southeast-2.amazonaws.com/66661a2c046cdc2ab8a029587e1872e92af846b1d60285b164d5b55fa3347602.jpg')
     await contract.addEntity(
       'Agora',
-      './agora.jpg',
+      'https://github-doc-sources.s3-ap-southeast-2.amazonaws.com/f7070d57bbe5496e29249421e91572f46ac4c2b62953b7ea046fa3707b9e6b2a.jpg',
     )
     await contract.addEntity(
       'University of Washington',
-      'https://media.licdn.com/dms/image/C4D0BAQEMmhF9TqUCgA/company-logo_400_400/0?e=1577923200&v=beta&t=dSv-VAvSHUGA3fQOH7MLiQSIdY2P4_BUdt2nDHmL-zw',
+      'https://github-doc-sources.s3-ap-southeast-2.amazonaws.com/9e77f325c3969a292f8768c8a8e070b0379523f213a46d4e42198439c636f569.jpg',
     )
     await contract.addEntity(
       'Treehouse',
-      'https://media.licdn.com/dms/image/C560BAQG1ElgY2zA89g/company-logo_400_400/0?e=1577923200&v=beta&t=5j6X95R11ho1zemSVtvAHgnO-OyHw4et7y4Nl8mqKNk',
+      'https://github-doc-sources.s3-ap-southeast-2.amazonaws.com/dc12c22f0cab5fd6943c2870d9b8eaf55902c02ced0519a66cdb96bc47ac698a.jpg',
     )
     await contract.addEntity(
       'Bond University',
-      'https://media.licdn.com/dms/image/C4E0BAQFWX-QgGvR9qw/company-logo_400_400/0?e=1577923200&v=beta&t=-4CyQl7nFmbumuPwQdtuhECWiuaYWcc1RnzuNoN7cIY',
+      'https://github-doc-sources.s3-ap-southeast-2.amazonaws.com/c8e91df8967c41080b7fdd21a13e005bf89dfbc5147457096183792cf539483a.jpg',
     )
     await contract.addEntity(
       'Coinmonks',
@@ -64,28 +60,28 @@ module.exports = async (deployer, environment) => {
     await contract.addOccupation('Associate Software Developer', 0, 'Description', 0, 1564995600, 1568278800, 'React Native, TypeScript')
     await contract.addOccupation('Full Stack Developer', 1, 'Description', 0, 1556528400, 1564894800, 'React, Lambda, NodeJS, TypeScript')
     await contract.addOccupation('Software Engineer', 2, 'Description', 1, 1556084578, 0, 'TypeScript')
-    await contract.addOccupation('Blockchain Developer', 3, 'Description', 3, 0, 0, 'EOSIO, TypeScript, React, IPFS')
-    await contract.addOccupation('Full Stack Blockchain Developer', 4, 'Description', 0, 0, 0, 'EOSIO, TypeScript, React, IPFS')
+    // await contract.addOccupation('Blockchain Developer', 3, 'Description', 3, 0, 0, 'EOSIO, TypeScript, React, IPFS')
+    await contract.addOccupation('Full Stack Blockchain Developer', 3, 'Description', 0, 0, 0, 'EOSIO, TypeScript, React, IPFS')
 
-    await contract.addEducation('Full Stack Javascript Developer', 6, '', 0, 1516024800, 1547560800)
-    await contract.addEducation('Computational Neuroscience', 5, '', 0, 1416060000, 1421330400)
-    await contract.addEducation('Business Accelerator', 7, '', 2, 1516024800, 1547560800)
-    await contract.addEducation('Film & Television', 7, '', 2, 1516024800, 1547560800)
+    await contract.addEducation('Full Stack Javascript Developer', 5, '', 0, 1516024800, 1547560800)
+    await contract.addEducation('Computational Neuroscience', 4, '', 0, 1416060000, 1421330400)
+    await contract.addEducation('Business Accelerator', 6, '', 2, 1516024800, 1547560800)
+    await contract.addEducation('Film & Television', 6, '', 2, 1516024800, 1547560800)
 
-    await contract.addPublication('Advanced EOS Series — Part 9 — Payable Actions', 8, 'https://medium.com/coinmonks/advanced-eos-series-part-9-payable-actions-42bf878bee36', 0)
-    await contract.addPublication('The Complete Electron Pipeline — Development to Rollout', 9, 'https://medium.com/coinmonks/advanced-eos-series-part-6-contract-to-contract-communication-ab352a8b60aa', 0)
-    await contract.addPublication('Advanced EOS Series — Part 6 — Contract-to-Contract Communication', 8, 'https://medium.com/coinmonks/advanced-eos-series-part-6-contract-to-contract-communication-ab352a8b60aa', 0)
-    await contract.addPublication('Advanced EOS Series — Part 5 — One-to-many Relationships', 8, 'https://medium.com/coinmonks/advanced-eos-series-part-5-one-to-many-relationships-42d2e075e05d', 1547128800)
-    await contract.addPublication('Advanced EOS Series — Part 4 — Table Uniqueness', 8, 'https://medium.com/coinmonks/advanced-eos-series-part-4-table-uniqueness-835843a207fc', 1545573600)
-    await contract.addPublication('Advanced EOS Series — Part 3 — Secondary Indexes', 8, 'https://medium.com/coinmonks/advanced-eos-series-part-3-secondary-indexes-1798f339cbb8', 1544968800)
-    await contract.addPublication('The Dream Team — React with Electron', 9, 'https://blog.usejournal.com/the-dream-team-react-with-electron-c808ecb5b55e', 1544709600)
-    await contract.addPublication('Advanced EOS Series — Part 2 — Singletons', 8, 'https://medium.com/coinmonks/advanced-eos-series-part-2-singletons-9e903772f71c', 1544104800)
-    await contract.addPublication('Advanced EOS Series — Part 1 — Cryptographic Hashes', 8, 'https://medium.com/coinmonks/advanced-eos-series-part-1-cryptographic-hashes-a251a8d371b8', 1543672800)
+    await contract.addPublication('Advanced EOS Series — Part 9 — Payable Actions', 7, 'https://medium.com/coinmonks/advanced-eos-series-part-9-payable-actions-42bf878bee36', 0)
+    await contract.addPublication('The Complete Electron Pipeline — Development to Rollout', 8, 'https://medium.com/coinmonks/advanced-eos-series-part-6-contract-to-contract-communication-ab352a8b60aa', 0)
+    await contract.addPublication('Advanced EOS Series — Part 6 — Contract-to-Contract Communication', 7, 'https://medium.com/coinmonks/advanced-eos-series-part-6-contract-to-contract-communication-ab352a8b60aa', 0)
+    await contract.addPublication('Advanced EOS Series — Part 5 — One-to-many Relationships', 7, 'https://medium.com/coinmonks/advanced-eos-series-part-5-one-to-many-relationships-42d2e075e05d', 1547128800)
+    await contract.addPublication('Advanced EOS Series — Part 4 — Table Uniqueness', 7, 'https://medium.com/coinmonks/advanced-eos-series-part-4-table-uniqueness-835843a207fc', 1545573600)
+    await contract.addPublication('Advanced EOS Series — Part 3 — Secondary Indexes', 7, 'https://medium.com/coinmonks/advanced-eos-series-part-3-secondary-indexes-1798f339cbb8', 1544968800)
+    await contract.addPublication('The Dream Team — React with Electron', 8, 'https://blog.usejournal.com/the-dream-team-react-with-electron-c808ecb5b55e', 1544709600)
+    await contract.addPublication('Advanced EOS Series — Part 2 — Singletons', 7, 'https://medium.com/coinmonks/advanced-eos-series-part-2-singletons-9e903772f71c', 1544104800)
+    await contract.addPublication('Advanced EOS Series — Part 1 — Cryptographic Hashes', 7, 'https://medium.com/coinmonks/advanced-eos-series-part-1-cryptographic-hashes-a251a8d371b8', 1543672800)
 
-    await contract.addCommunity('Blockchain Educator', 10, '', 1568240820, 1576993378)
+    await contract.addCommunity('Blockchain Educator', 9, '', 1568240820, 1576993378)
 
-    await contract.addAward('Startup Catalyst Alumni', 11, 'Silicon Valley Youth Mission by Startup Catalyst Inaugural Youth Mission Member', 1414764000)
-    await contract.addAward('Bond University Entrepreneurship Business Accelerator', 7, 'Attended as Founder of Sprout in Bond Universities inaugural Accelerator program', 1413381600)
-    await contract.addAward('Global Startup Weekend San Francisco', 12, 'Awarded second place for VisaTrak, an application to help travellers track and manage their visa applications.', 1414764000)
+    await contract.addAward('Startup Catalyst Alumni', 10, 'Silicon Valley Youth Mission by Startup Catalyst Inaugural Youth Mission Member', 1414764000)
+    await contract.addAward('Bond University Entrepreneurship Business Accelerator', 6, 'Attended as Founder of Sprout in Bond Universities inaugural Accelerator program', 1413381600)
+    await contract.addAward('Global Startup Weekend San Francisco', 11, 'Awarded second place for VisaTrak, an application to help travellers track and manage their visa applications.', 1414764000)
   }
 }
